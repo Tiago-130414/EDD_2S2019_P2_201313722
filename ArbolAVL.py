@@ -1,5 +1,6 @@
 class nodoArbol(object): 
-    def __init__(self, carnet): 
+    def __init__(self, carnet, nombre):
+        self.nombre = nombre 
         self.carnet = carnet 
         self.izquierda = None
         self.derecha = None
@@ -7,21 +8,18 @@ class nodoArbol(object):
   
 class arbolAVL(object): 
   
-
-    def insertar(self, raiz, cnt): 
+    def insertar(self, raiz, cnt, nom): 
       
         if not raiz: 
-            return nodoArbol(cnt) 
+            return nodoArbol(cnt,nom) 
         elif cnt < raiz.carnet: 
-            raiz.izquierda = self.insertar(raiz.izquierda, cnt) 
+            raiz.izquierda = self.insertar(raiz.izquierda, cnt, nom) 
         else: 
-            raiz.derecha = self.insertar(raiz.derecha, cnt) 
+            raiz.derecha = self.insertar(raiz.derecha, cnt, nom) 
   
-
         raiz.altura = 1 + max(self.getAltura(raiz.izquierda), 
                            self.getAltura(raiz.derecha)) 
   
-
         balance = self.getBalance(raiz) 
   
         # Caso 1 - izquierda  izquierda 
@@ -94,16 +92,39 @@ class arbolAVL(object):
         print("{0} ".format(raiz.carnet), end="") 
         self.preOrder(raiz.izquierda) 
         self.preOrder(raiz.derecha) 
-  
+
+    def inOrder(self, raiz):
+        if not raiz:
+            return
+
+        self.inOrder(raiz.izquierda) 
+        print("{0} ".format(raiz.carnet), end="") 
+        self.inOrder(raiz.derecha)    
+
+    def postOrder(self,raiz):
+        if not raiz:
+            return
+           
+        self.postOrder(raiz.izquierda) 
+        self.postOrder(raiz.derecha)    
+        print("{0} ".format(raiz.carnet), end="") 
+        
   
 myTree = arbolAVL() 
 raiz = None
   
-raiz = myTree.insertar(raiz, 10) 
-raiz = myTree.insertar(raiz, 20) 
-raiz = myTree.insertar(raiz, 30) 
-raiz = myTree.insertar(raiz, 40) 
-raiz = myTree.insertar(raiz, 50) 
-raiz = myTree.insertar(raiz, 25) 
+raiz = myTree.insertar(raiz, 10,"hola1") 
+raiz = myTree.insertar(raiz, 20,"hola2") 
+raiz = myTree.insertar(raiz, 30,"hola3") 
+raiz = myTree.insertar(raiz, 40,"hola4") 
+raiz = myTree.insertar(raiz, 50,"hola5") 
+raiz = myTree.insertar(raiz, 25,"hola6") 
   
-myTree.preOrder(raiz) 
+print("pre orden")  
+myTree.preOrder(raiz)
+print()
+print("in orden")
+myTree.inOrder(raiz)
+print()
+print("post order")
+myTree.postOrder(raiz) 
