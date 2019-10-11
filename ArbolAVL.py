@@ -1,3 +1,6 @@
+import sys
+import os
+
 class nodoArbol(object): 
     def __init__(self, carnet, nombre):
         self.nombre = nombre 
@@ -7,7 +10,7 @@ class nodoArbol(object):
         self.altura = 1
   
 class arbolAVL(object): 
-  
+    
     def insertar(self, raiz, cnt, nom): 
       
         if not raiz: 
@@ -108,6 +111,59 @@ class arbolAVL(object):
         self.postOrder(raiz.izquierda) 
         self.postOrder(raiz.derecha)    
         print("{0} ".format(raiz.carnet), end="") 
+
+    def listadoNodos(self, raiz,cad):
+        if not raiz:
+            return cad
+        else:
+            self.listadoNodos(raiz.izquierda,cad)
+            cad += str("\tNodo"+str(raiz.nombre)+"[label=\"<izquierda>|"+str(raiz.nombre)+"|<derecha>\"];\n")
+            self.listadoNodos(raiz.derecha,cad)
+        return cad         
+
+    def apuntadores(self, raiz,cad2):
+        if not raiz:
+            return cad2
+        else:
+            self.apuntadores(raiz.izquierda,cad2)
+
+            if raiz.izquierda is not None:
+                cad2 += "\tNodo"+raiz.nombre+":izquierda->Nodo"+raiz.izquierda.nombre+";\n";
+       
+            if raiz.derecha is not None:
+                cad2 += "\tNodo"+raiz.nombre+":derecha->Nodo"+raiz.derecha.nombre+";\n";
+
+            self.apuntadores(raiz.derecha,cad2)    
+        return cad2
+
+
+    def graficarArbolAVL(self,raiz):
+        if not raiz:
+            return
+        else:
+            cadena ="\t"
+            cadena2 = ""
+            ruta_Grafica_LD = "C:/Graficas_Practica2/graficaArbolAVL.dot"
+            archivo = open(ruta_Grafica_LD,'w')
+            archivo.writelines("digraph ArbolAVL{\n")
+            archivo.write("\trankdir=TB;\n")
+            archivo.write("\tordering=out;")
+            archivo.write("\tgraph [splines=compound,nodesep=0.5]")
+            archivo.write("\tsubgraph cluster_0{\n")
+            archivo.write("\tstyle=filled;\n")
+            archivo.write("\tcolor = lightgrey;\n")  
+            archivo.write("\tlabelloc=\"t\";\n")
+            archivo.write("\tnode[shape = record, style=\"rounded,filled\", fillcolor=\"orange:red\",width=0.7,height=0.5];\n")
+            cadena += self.listadoNodos(raiz,cadena)
+            archivo.write(cadena)
+            cadena2 = self.apuntadores(raiz,cadena2)    
+            archivo.write(cadena2)
+            archivo.write("\tlabel = \"Arbol AVL\";\n")
+            archivo.write("}\n")   
+            archivo.write("}\n")   
+            archivo.close() 
+            os.system("dot C:/Graficas_Practica2/graficaArbolAVL.dot -o C:/Graficas_Practica2/graficaArbolAVL.png -Tpng -Gcharset=utf8")
+            os.system("C:/Graficas_Practica2/graficaArbolAVL.png")       
         
   
 myTree = arbolAVL() 
@@ -128,3 +184,5 @@ myTree.inOrder(raiz)
 print()
 print("post order")
 myTree.postOrder(raiz) 
+
+myTree.graficarArbolAVL(raiz)
