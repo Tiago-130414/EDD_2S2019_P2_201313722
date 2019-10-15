@@ -1,6 +1,17 @@
 import sys
 import os
-
+#arbol completo
+cad =""
+cad2=""
+#arbol recorrido inorden
+cadInO=""
+cadInO2=""
+#arbol recorrido postorden
+cadPost=""
+cadPost2=""
+#arbol recorrido preorden
+cadPre=""
+cadPre2=""
 class nodoArbol(object): 
     def __init__(self, carnet, nombre):
         self.nombre = nombre 
@@ -86,7 +97,8 @@ class arbolAVL(object):
             return 0
   
         return self.getAltura(raiz.izquierda) - self.getAltura(raiz.derecha) 
-  
+    #recorrido de arbol
+
     def preOrder(self, raiz): 
   
         if not raiz: 
@@ -112,20 +124,22 @@ class arbolAVL(object):
         self.postOrder(raiz.derecha)    
         print("{0} ".format(raiz.carnet), end="") 
 
-    def listadoNodos(self, raiz,cad):
-        if not raiz:
-            return cad
-        else:
-            self.listadoNodos(raiz.izquierda,cad)
-            cad += str("\tNodo"+str(raiz.nombre)+"[label=\"<izquierda>|"+str(raiz.nombre)+"|<derecha>\"];\n")
-            self.listadoNodos(raiz.derecha,cad)
+    #grafica arbol completo
+
+    def listadoNodos(self, raiz):
+        global cad
+        if raiz:
+            self.listadoNodos(raiz.izquierda)
+            cad +="\tNodo"+str(raiz.nombre)+"[label=\"<izquierda>|"+"carne: "+str(raiz.carnet)+"\\n"+"nombre: "+str(raiz.nombre)+"\\n"+"altura: "+str(raiz.altura)+"|<derecha>\"];\n"
+            self.listadoNodos(raiz.derecha) 
         return cad         
 
-    def apuntadores(self, raiz,cad2):
+    def apuntadores(self, raiz):
+        global cad2
         if not raiz:
             return cad2
         else:
-            self.apuntadores(raiz.izquierda,cad2)
+            self.apuntadores(raiz.izquierda)
 
             if raiz.izquierda is not None:
                 cad2 += "\tNodo"+raiz.nombre+":izquierda->Nodo"+raiz.izquierda.nombre+";\n";
@@ -133,9 +147,8 @@ class arbolAVL(object):
             if raiz.derecha is not None:
                 cad2 += "\tNodo"+raiz.nombre+":derecha->Nodo"+raiz.derecha.nombre+";\n";
 
-            self.apuntadores(raiz.derecha,cad2)    
+            self.apuntadores(raiz.derecha)    
         return cad2
-
 
     def graficarArbolAVL(self,raiz):
         if not raiz:
@@ -151,21 +164,179 @@ class arbolAVL(object):
             archivo.write("\tgraph [splines=compound,nodesep=0.5]")
             archivo.write("\tsubgraph cluster_0{\n")
             archivo.write("\tstyle=filled;\n")
-            archivo.write("\tcolor = lightgrey;\n")  
+            archivo.write("\tcolor = grey;\n")  
             archivo.write("\tlabelloc=\"t\";\n")
             archivo.write("\tnode[shape = record, style=\"rounded,filled\", fillcolor=\"orange:red\",width=0.7,height=0.5];\n")
-            cadena += self.listadoNodos(raiz,cadena)
+            cadena = self.listadoNodos(raiz)
             archivo.write(cadena)
-            cadena2 = self.apuntadores(raiz,cadena2)    
+            cadena2 = self.apuntadores(raiz)    
             archivo.write(cadena2)
             archivo.write("\tlabel = \"Arbol AVL\";\n")
             archivo.write("}\n")   
             archivo.write("}\n")   
             archivo.close() 
             os.system("dot C:/Graficas_Practica2/graficaArbolAVL.dot -o C:/Graficas_Practica2/graficaArbolAVL.png -Tpng -Gcharset=utf8")
-            os.system("C:/Graficas_Practica2/graficaArbolAVL.png")       
-        
-  
+            os.system("C:/Graficas_Practica2/graficaArbolAVL.png") 
+            cad=""
+            cad2=""      
+            
+    # grafica recorrido inorden        
+    def listadoNodosInO(self,raiz):
+        global cadInO
+        if raiz:
+            self.listadoNodosInO(raiz.izquierda)
+            cadInO +="\tNodo"+str(raiz.nombre)+"[label=\""+"carne: "+str(raiz.carnet)+"\\n"+"nombre: "+str(raiz.nombre)+"\"];\n"
+            self.listadoNodosInO(raiz.derecha) 
+        return cadInO   
+
+    def apuntadoresInO(self,raiz):
+        global cadInO2
+        if not raiz:
+            return cadInO2
+        else:
+            self.apuntadoresInO(raiz.izquierda)
+            cadInO2 += "\tNodo"+raiz.nombre+"->";
+            self.apuntadoresInO(raiz.derecha)
+        return cadInO2    
+
+    def graficarInOrden(self,raiz):
+        temp = 0
+        if not raiz:
+            return
+        else:
+            cadena3 ="\t"
+            cadena4 = ""
+            ruta_Grafica_LD = "C:/Graficas_Practica2/graficaArbolAVLInO.dot"
+            archivo = open(ruta_Grafica_LD,'w')
+            archivo.writelines("digraph ArbolAVLInOrden{\n")
+            archivo.write("\trankdir=LR;\n")
+            archivo.write("\tordering=out;")
+            archivo.write("\tgraph [splines=compound,nodesep=0.5]")
+            archivo.write("\tsubgraph cluster_0{\n")
+            archivo.write("\tstyle=filled;\n")
+            archivo.write("\tcolor = grey;\n")  
+            archivo.write("\tlabelloc=\"t\";\n")
+            archivo.write("\tnode[shape = record, style=\"rounded,filled\", fillcolor=\"orange:red\",width=0.7,height=0.5];\n")
+            cadena3 = self.listadoNodosInO(raiz)
+            archivo.write(cadena3)
+            cadena2 = self.eliminarUlt(self.apuntadoresInO(raiz))
+            archivo.write(cadena2)
+            archivo.write("\tlabel = \"Arbol AVL InOrden\";\n")
+            archivo.write("}\n")   
+            archivo.write("}\n")   
+            archivo.close() 
+            os.system("dot C:/Graficas_Practica2/graficaArbolAVLInO.dot -o C:/Graficas_Practica2/graficaArbolAVLInO.png -Tpng -Gcharset=utf8")
+            os.system("C:/Graficas_Practica2/graficaArbolAVLInO.png")  
+            cadInO=""
+            cadInO2=""
+
+    #grafica recorrido preorden
+    def listadoNodosPreO(self,raiz):
+        global cadPre
+        if raiz:              
+            cadPre +="\tNodo"+str(raiz.nombre)+"[label=\""+"carne: "+str(raiz.carnet)+"\\n"+"nombre: "+str(raiz.nombre)+"\"];\n"
+            self.listadoNodosPreO(raiz.izquierda)
+            self.listadoNodosPreO(raiz.derecha) 
+        return cadPre   
+
+    def apuntadoresPreO(self,raiz):
+        global cadPre2
+        if not raiz:
+            return cadPre2
+        else:
+            
+            cadPre2 += "\tNodo"+raiz.nombre+"->";
+            self.apuntadoresPreO(raiz.izquierda)
+            self.apuntadoresPreO(raiz.derecha)
+        return cadPre2           
+
+    def graficarPreOrden(self,raiz):
+        temp = 0
+        if not raiz:
+            return
+        else:
+            cadena5 ="\t"
+            cadena6 = ""
+            ruta_Grafica_LD = "C:/Graficas_Practica2/graficaArbolAVLPreO.dot"
+            archivo = open(ruta_Grafica_LD,'w')
+            archivo.writelines("digraph ArbolAVLPreOrden{\n")
+            archivo.write("\trankdir=LR;\n")
+            archivo.write("\tordering=out;")
+            archivo.write("\tgraph [splines=compound,nodesep=0.5]")
+            archivo.write("\tsubgraph cluster_0{\n")
+            archivo.write("\tstyle=filled;\n")
+            archivo.write("\tcolor = grey;\n")  
+            archivo.write("\tlabelloc=\"t\";\n")
+            archivo.write("\tnode[shape = record, style=\"rounded,filled\", fillcolor=\"orange:red\",width=0.7,height=0.5];\n")
+            cadena5 = self.listadoNodosPreO(raiz)
+            archivo.write(cadena5)
+            cadena6 = self.eliminarUlt(self.apuntadoresPreO(raiz))
+            archivo.write(cadena6)
+            archivo.write("\tlabel = \"Arbol AVL PreOrden\";\n")
+            archivo.write("}\n")   
+            archivo.write("}\n")   
+            archivo.close() 
+            os.system("dot C:/Graficas_Practica2/graficaArbolAVLPreO.dot -o C:/Graficas_Practica2/graficaArbolAVLPreO.png -Tpng -Gcharset=utf8")
+            os.system("C:/Graficas_Practica2/graficaArbolAVLPreO.png")  
+            cadInO=""
+            cadInO2=""
+
+    #grafica recorrido postorden
+    
+    def listadoNodosPostO(self,raiz):
+        global cadPost
+        if raiz:              
+            self.listadoNodosPostO(raiz.izquierda)
+            self.listadoNodosPostO(raiz.derecha)
+            cadPost +="\tNodo"+str(raiz.nombre)+"[label=\""+"carne: "+str(raiz.carnet)+"\\n"+"nombre: "+str(raiz.nombre)+"\"];\n"
+        return cadPost  
+
+    def apuntadoresPostO(self,raiz):
+        global cadPost2
+        if not raiz:
+            return cadPost2
+        else:
+            self.apuntadoresPostO(raiz.izquierda)
+            self.apuntadoresPostO(raiz.derecha)
+            cadPost2 += "\tNodo"+raiz.nombre+"->";
+        return cadPost2  
+
+    def graficarPostOrden(self,raiz):
+        temp = 0
+        if not raiz:
+            return
+        else:
+            cadena7 ="\t"
+            cadena8 = ""
+            ruta_Grafica_LD = "C:/Graficas_Practica2/graficaArbolAVLPostO.dot"
+            archivo = open(ruta_Grafica_LD,'w')
+            archivo.writelines("digraph ArbolAVLPostOrden{\n")
+            archivo.write("\trankdir=LR;\n")
+            archivo.write("\tordering=out;")
+            archivo.write("\tgraph [splines=compound,nodesep=0.5]")
+            archivo.write("\tsubgraph cluster_0{\n")
+            archivo.write("\tstyle=filled;\n")
+            archivo.write("\tcolor = grey;\n")  
+            archivo.write("\tlabelloc=\"t\";\n")
+            archivo.write("\tnode[shape = record, style=\"rounded,filled\", fillcolor=\"orange:red\",width=0.7,height=0.5];\n")
+            cadena7 = self.listadoNodosPostO(raiz)
+            archivo.write(cadena7)
+            cadena8 = self.eliminarUlt(self.apuntadoresPostO(raiz))
+            archivo.write(cadena8)
+            archivo.write("\tlabel = \"Arbol AVL PostOrden\";\n")
+            archivo.write("}\n")   
+            archivo.write("}\n")   
+            archivo.close() 
+            os.system("dot C:/Graficas_Practica2/graficaArbolAVLPostO.dot -o C:/Graficas_Practica2/graficaArbolAVLPostO.png -Tpng -Gcharset=utf8")
+            os.system("C:/Graficas_Practica2/graficaArbolAVLPostO.png")  
+            cadPost=""
+            cadPost2=""
+    #eliminar flechita final
+    def eliminarUlt(self,cd):
+        temp = len(cd)
+        cadenaSF = cd[:temp-2]
+        return cadenaSF
+
 myTree = arbolAVL() 
 raiz = None
   
@@ -186,3 +357,6 @@ print("post order")
 myTree.postOrder(raiz) 
 
 myTree.graficarArbolAVL(raiz)
+myTree.graficarPreOrden(raiz)
+myTree.graficarInOrden(raiz)
+myTree.graficarPostOrden(raiz)
