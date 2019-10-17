@@ -2,7 +2,7 @@ import os
 import sys
 import csv
 import time
-
+from sha_256 import encriptar
 class nodoBlockChain:
     def __init__(self, index,fechaHora,nombreClase,datosAvl,hashAnterior,hashPropio):
         self.indice = index
@@ -37,8 +37,7 @@ class Blockchain:
 
         last.siguiente = nuevo_nodo
         nuevo_nodo.anterior = last        
-        print("agregado con exito al final")        
-
+        
     def mostrar (self):
         nodo = self.cabeza
         while (nodo is not None):
@@ -54,7 +53,7 @@ class Blockchain:
     def listG(self,node):
         cad =""
         while(node is not None):
-           cad += "Nodo"+str(node.indice) +"BLCHN"+str(node.clase)+ "[label=\""+node.clase+"\\n"+node.timestamp+"\\n"+str(node.previousHash)+"\\n"+str(node.hashActual)+"\"style = filled, fillcolor = \"red:orange\"];"+"\n" 
+           cad += "Nodo"+str(node.indice) +"BLCHN"+str(node.clase)+ "[label=\""+"Class= "+node.clase+"\\n"+"TimeStamp= "+node.timestamp+"\\n"+"PHash= "+str(node.previousHash)+"\\n"+"HASH="+str(node.hashActual)+"\"style = filled, fillcolor = \"red:orange\"];"+"\n" 
            node = node.siguiente
         return cad
 
@@ -94,20 +93,36 @@ class Blockchain:
         contador=0
         fh = self.fechaHora()
         nomClase = ""
+        jsonString = ""
+        hashC = ""
+        hashP = ""
+        cadHash =""
         with open (nombreArchivo) as File:
             lee = csv.reader(File, delimiter=',',quotechar='"',quoting=csv.QUOTE_MINIMAL)
             datos  = list(lee)
             #clase
             if(self.estaVacia()):
                 index = 0
-
-                self.agregarFinal(index,fh,)
-                pass
-
-            print (datos[0][1])
-            #datos json
-            c = datos[1][1]
-            print(c)
+                hashC = "0000"
+                hashP = "0000"
+                nomClase = datos[0][1]
+                jsonString = datos[1][1]
+                cadHash = str(index)+fh+nomClase+jsonString+str(hashC)
+                hashP = encriptar(cadHash)
+                self.agregarFinal(index,fh,nomClase,jsonString,hashC,hashP)
+                self.graficarListaDoble()
+            else:
+                last = self.cabeza
+                while(last.siguiente is not None):
+                    last = last.siguiente
+                index = int(last.indice) + 1
+                nomClase = datos[0][1]
+                jsonString = datos[1][1]
+                hashC = last.hashActual
+                cadHash = str(index)+fh+nomClase+jsonString+str(hashC)
+                hashP = encriptar(cadHash) 
+                self.agregarFinal(index,fh,nomClase,jsonString,str(hashC),str(hashP))
+                self.graficarListaDoble()
                     
     def fechaHora(self):
         fecha=""
@@ -117,6 +132,8 @@ class Blockchain:
         fecha = time.strftime("%d-%m-%y-")
         fechaHora = fecha+"::"+hora
         return fechaHora
+
+            
 """lista = Blockchain()
 lista.agregarFinal(1,"fecha1","EDD","prueba1",0,0)
 lista.agregarFinal(2,"fecha2","EDD","prueba2",0,1)

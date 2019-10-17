@@ -15,11 +15,4 @@ class archivos:
             print(estudiantes["value"])
             self.preordenJson(estudiantes["left"])
             self.preordenJson(estudiantes["right"])
-    
-                    
-#obj = archivos()
-#obj.leerCsv()                        
-     #print(estudiantes["value"])
-            #print(estudiantes["left"]["value"])
-            #print(estudiantes["right"]["value"])
  

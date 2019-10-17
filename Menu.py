@@ -2,7 +2,6 @@ import curses
 from curses import KEY_RIGHT,KEY_LEFT,KEY_UP,KEY_DOWN
 from SelectBlock import seleccionar
 from insertBlock import cargar
-from sha_256 import encriptar
 #Estructuras
 from Lista_Doble import Blockchain
 from ArbolAVL import arbolAVL
@@ -50,12 +49,12 @@ while(opcion == -1):
         #cargar retorna un string con el nombre de archivo que se va a cargar
         nomArchivo = cargar(window)
         nomArchivo = nomArchivo.replace('\n','')
-        
+        cadenaDeBloques.leerCsv(nomArchivo)
         menu(window) 
         opcion = -1
     elif(opcion==50):
         #Select Block
-        seleccionar(window)
+        seleccionar(window, cadenaDeBloques)
         menu(window)
         opcion = -1
     elif(opcion==51):
