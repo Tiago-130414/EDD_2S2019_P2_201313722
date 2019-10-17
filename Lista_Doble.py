@@ -1,5 +1,7 @@
 import os
 import sys
+import csv
+import time
 
 class nodoBlockChain:
     def __init__(self, index,fechaHora,nombreClase,datosAvl,hashAnterior,hashPropio):
@@ -88,7 +90,34 @@ class Blockchain:
             os.system("dot C:/Graficas_Practica2/graficaLD.dot -o C:/Graficas_Practica2/graficaLD.png -Tpng -Gcharset=utf8")
             os.system("C:/Graficas_Practica2/graficaLD.png")   
 
-lista = Blockchain()
+    def leerCsv(self,nombreArchivo):
+        contador=0
+        fh = self.fechaHora()
+        nomClase = ""
+        with open (nombreArchivo) as File:
+            lee = csv.reader(File, delimiter=',',quotechar='"',quoting=csv.QUOTE_MINIMAL)
+            datos  = list(lee)
+            #clase
+            if(self.estaVacia()):
+                index = 0
+
+                self.agregarFinal(index,fh,)
+                pass
+
+            print (datos[0][1])
+            #datos json
+            c = datos[1][1]
+            print(c)
+                    
+    def fechaHora(self):
+        fecha=""
+        hora=""
+        fechaHora=""
+        hora = time.strftime("%H:%M:%S")
+        fecha = time.strftime("%d-%m-%y-")
+        fechaHora = fecha+"::"+hora
+        return fechaHora
+"""lista = Blockchain()
 lista.agregarFinal(1,"fecha1","EDD","prueba1",0,0)
 lista.agregarFinal(2,"fecha2","EDD","prueba2",0,1)
 lista.agregarFinal(3,"fecha3","EDD","prueba3",1,2)
@@ -98,4 +127,5 @@ lista.agregarFinal(6,"fecha6","EDD","prueba6",4,5)
 lista.agregarFinal(7,"fecha7","EDD","prueba7",5,6)
 lista.agregarFinal(8,"fecha8","EDD","prueba8",6,7)
 lista.graficarListaDoble()
-#lista.mostrar()
+lista.mostrar()
+"""

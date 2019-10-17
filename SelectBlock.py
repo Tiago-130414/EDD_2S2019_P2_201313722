@@ -3,19 +3,19 @@ from curses import KEY_RIGHT,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_ENTER
 
 def seleccionar(window):
     txt = ""    
-    titulo(window,'U s e r  S e l e c t i o n')
+    titulo(window,'S e l e c t  B l o c k')
     #aux = listaCD.cabezaLCD
     #pintarUsuario(window)
     while True:
         salida = window.getch()
         if(salida == KEY_LEFT):
                 #izquierda
-                titulo(window,'U s e r  S e l e c t i o n')
+                titulo(window,'S e l e c t  B l o c k')
                 #aux = aux.anterior
                 #pintarUsuario(window,aux)
         if(salida == KEY_RIGHT):
                 #derecha
-                titulo(window,'U s e r  S e l e c t i o n')
+                titulo(window,'S e l e c t  B l o c k')
                 #aux = aux.siguiente
                 #pintarUsuario(window,aux)          
         if(salida == 10):

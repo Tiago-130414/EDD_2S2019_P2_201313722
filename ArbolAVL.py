@@ -337,15 +337,17 @@ class arbolAVL(object):
         cadenaSF = cd[:temp-2]
         return cadenaSF
 
-myTree = arbolAVL() 
+
+"""myTree = arbolAVL() 
 raiz = None
   
-raiz = myTree.insertar(raiz, 10,"hola1") 
-raiz = myTree.insertar(raiz, 20,"hola2") 
-raiz = myTree.insertar(raiz, 30,"hola3") 
-raiz = myTree.insertar(raiz, 40,"hola4") 
-raiz = myTree.insertar(raiz, 50,"hola5") 
-raiz = myTree.insertar(raiz, 25,"hola6") 
+raiz = myTree.insertar(raiz, 201403525,"Nery") 
+raiz = myTree.insertar(raiz, 201212963,"Andres") 
+raiz = myTree.insertar(raiz, 201005874,"Estudiante1") 
+raiz = myTree.insertar(raiz, 201313526,"Alan") 
+raiz = myTree.insertar(raiz, 201403819,"Anne") 
+raiz = myTree.insertar(raiz, 201403624,"Fernando")
+raiz = myTree.insertar(raiz, 201602255,"Estudiante2") 
   
 print("pre orden")  
 myTree.preOrder(raiz)
@@ -360,3 +362,4 @@ myTree.graficarArbolAVL(raiz)
 myTree.graficarPreOrden(raiz)
 myTree.graficarInOrden(raiz)
 myTree.graficarPostOrden(raiz)
+"""
