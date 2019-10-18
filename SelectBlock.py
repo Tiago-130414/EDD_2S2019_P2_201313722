@@ -1,7 +1,7 @@
 import curses
 from curses import KEY_RIGHT,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_ENTER
 import json
-def seleccionar(window,listaD = object):
+def seleccionar(window,listaD = object,bloqueC = object):
     txt = ""    
     titulo(window,'S e l e c t  B l o c k')
     aux = listaD.cabeza
@@ -26,9 +26,13 @@ def seleccionar(window,listaD = object):
                     pintarUsuario(window,aux)      
         if(salida == 10):
                 #Seleccionar usuario con enter
-                #txt = aux.usuario
-                print("presione enter")
-                return txt              
+                if  bloqueC.estaVacia():
+                        bloqueC.agregarFinal(aux.indice,aux.timestamp,aux.clase,aux.data,aux.previousHash,aux.hashActual)
+                        return
+                else:
+                        bloqueC.cabeza = None
+                        bloqueC.agregarFinal(aux.indice,aux.timestamp,aux.clase,aux.data,aux.previousHash,aux.hashActual)              
+                        return
         if(salida == 27):
                 #salida escape
                 break

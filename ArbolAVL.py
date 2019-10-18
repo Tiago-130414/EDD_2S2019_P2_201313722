@@ -1,5 +1,7 @@
 import sys
 import os
+import json
+from os import remove
 #arbol completo
 cad =""
 cad2=""
@@ -12,6 +14,7 @@ cadPost2=""
 #arbol recorrido preorden
 cadPre=""
 cadPre2=""
+List=[]
 class nodoArbol(object): 
     def __init__(self, carnet, nombre):
         self.nombre = nombre 
@@ -151,6 +154,7 @@ class arbolAVL(object):
         return cad2
 
     def graficarArbolAVL(self,raiz):
+        List.clear()
         if not raiz:
             return
         else:
@@ -176,16 +180,35 @@ class arbolAVL(object):
             archivo.write("}\n")   
             archivo.close() 
             os.system("dot C:/Graficas_Practica2/graficaArbolAVL.dot -o C:/Graficas_Practica2/graficaArbolAVL.png -Tpng -Gcharset=utf8")
-            os.system("C:/Graficas_Practica2/graficaArbolAVL.png") 
-            cad=""
-            cad2=""      
-            
+            os.system("C:/Graficas_Practica2/graficaArbolAVL.png")       
+
+    def limpiarV(self):
+        #arbol completo
+        global cad 
+        global cad2
+        cad =""
+        cad2=""
+        #arbol recorrido inorden                
+        global cadInO
+        global cadInO2
+        cadInO=""
+        cadInO2=""
+        #arbol recorrido postorden
+        global cadPost
+        global cadPost2
+        cadPost=""
+        cadPost2=""
+        #arbol recorrido preorden
+        global cadPre
+        global cadPre2
+        cadPre=""
+        cadPre2=""
     # grafica recorrido inorden        
     def listadoNodosInO(self,raiz):
         global cadInO
         if raiz:
             self.listadoNodosInO(raiz.izquierda)
-            cadInO +="\tNodo"+str(raiz.nombre)+"[label=\""+"carne: "+str(raiz.carnet)+"\\n"+"nombre: "+str(raiz.nombre)+"\"];\n"
+            cadInO +="\tNodo"+str(raiz.nombre)+"C"+str(raiz.carnet)+"[label=\""+"carne: "+str(raiz.carnet)+"\\n"+"nombre: "+str(raiz.nombre)+"\"];\n"
             self.listadoNodosInO(raiz.derecha) 
         return cadInO   
 
@@ -195,7 +218,7 @@ class arbolAVL(object):
             return cadInO2
         else:
             self.apuntadoresInO(raiz.izquierda)
-            cadInO2 += "\tNodo"+raiz.nombre+"->";
+            cadInO2 += "\tNodo"+raiz.nombre+"C"+str(raiz.carnet)+"->";
             self.apuntadoresInO(raiz.derecha)
         return cadInO2    
 
@@ -219,14 +242,17 @@ class arbolAVL(object):
             archivo.write("\tnode[shape = record, style=\"rounded,filled\", fillcolor=\"orange:red\",width=0.7,height=0.5];\n")
             cadena3 = self.listadoNodosInO(raiz)
             archivo.write(cadena3)
-            cadena2 = self.eliminarUlt(self.apuntadoresInO(raiz))
-            archivo.write(cadena2)
+            cadena4 = self.eliminarUlt(self.apuntadoresInO(raiz))
+            archivo.write(cadena4)
             archivo.write("\tlabel = \"Arbol AVL InOrden\";\n")
             archivo.write("}\n")   
             archivo.write("}\n")   
             archivo.close() 
             os.system("dot C:/Graficas_Practica2/graficaArbolAVLInO.dot -o C:/Graficas_Practica2/graficaArbolAVLInO.png -Tpng -Gcharset=utf8")
             os.system("C:/Graficas_Practica2/graficaArbolAVLInO.png")  
+            self.inOrder(raiz)
+            global cadInO
+            global cadInO2
             cadInO=""
             cadInO2=""
 
@@ -278,8 +304,11 @@ class arbolAVL(object):
             archivo.close() 
             os.system("dot C:/Graficas_Practica2/graficaArbolAVLPreO.dot -o C:/Graficas_Practica2/graficaArbolAVLPreO.png -Tpng -Gcharset=utf8")
             os.system("C:/Graficas_Practica2/graficaArbolAVLPreO.png")  
-            cadInO=""
-            cadInO2=""
+            self.preOrder(raiz)
+            global cadPre
+            global cadPre2
+            cadPre=""
+            cadPre2=""
 
     #grafica recorrido postorden
     
@@ -337,6 +366,35 @@ class arbolAVL(object):
         cadenaSF = cd[:temp-2]
         return cadenaSF
 
+    def leerJson(self,archivoJson,r=object):
+            estudiantes = json.loads(archivoJson)
+            self.preordenJson(estudiantes)
+            r = self.insertarC(r)
+            return r
+
+    def preordenJson(self,estudiantes):
+            if not estudiantes:
+                return
+            #ingresar los datos al arbol
+            est = estudiantes["value"]
+            List.append(est)
+            #lt = est.split('-')
+            #nombre = lt[1]
+            #carne = lt[0]
+            #raiz = self.insertar(raiz,int(carne),nombre)
+            self.preordenJson(estudiantes["left"])
+            self.preordenJson(estudiantes["right"])
+
+    def insertarC(self, r=object):
+        
+        carne=""
+        nombre=""
+        for x in range(0,len(List)):
+            lt = List[x].split('-')
+            nombre = lt[1]
+            carne = lt[0]
+            r = self.insertar(r,carne,nombre)
+        return r        
 
 """myTree = arbolAVL() 
 raiz = None

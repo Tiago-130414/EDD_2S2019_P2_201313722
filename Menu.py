@@ -2,12 +2,13 @@ import curses
 from curses import KEY_RIGHT,KEY_LEFT,KEY_UP,KEY_DOWN
 from SelectBlock import seleccionar
 from insertBlock import cargar
+from Reports import reportar
 #Estructuras
 from Lista_Doble import Blockchain
-from ArbolAVL import arbolAVL
 #manejo archivos
 from leerJSON import archivos
 nomArchivo =""
+seleccionBloque=""
 def menu(window):
     titulo(window,'M    E   N   U')
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK) 
@@ -40,6 +41,7 @@ curses.curs_set(0)
 menu(window)
 manejoArchivos = archivos()
 cadenaDeBloques = Blockchain()
+bloqueS = Blockchain()
 
 opcion =-1
 while(opcion == -1):
@@ -54,13 +56,20 @@ while(opcion == -1):
         opcion = -1
     elif(opcion==50):
         #Select Block
-        seleccionar(window, cadenaDeBloques)
+        if not cadenaDeBloques.estaVacia():
+            seleccionar(window, cadenaDeBloques,bloqueS)
         menu(window)
         opcion = -1
     elif(opcion==51):
         #Reports
-        menu(window)
-        opcion = -1    
+        if not bloqueS.estaVacia():
+            if not cadenaDeBloques.estaVacia():
+                reportar(window,cadenaDeBloques,bloqueS) 
+                menu(window)
+                opcion = -1     
+        else:        
+            menu(window)
+            opcion = -1    
     elif(opcion==52):
         #Salir
         pass

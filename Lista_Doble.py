@@ -2,6 +2,7 @@ import os
 import sys
 import csv
 import time
+import json
 from sha_256 import encriptar
 class nodoBlockChain:
     def __init__(self, index,fechaHora,nombreClase,datosAvl,hashAnterior,hashPropio):
@@ -90,6 +91,7 @@ class Blockchain:
             os.system("C:/Graficas_Practica2/graficaLD.png")   
 
     def leerCsv(self,nombreArchivo):
+        bloque =""
         contador=0
         fh = self.fechaHora()
         nomClase = ""
@@ -104,13 +106,19 @@ class Blockchain:
             if(self.estaVacia()):
                 index = 0
                 hashC = "0000"
-                hashP = "0000"
                 nomClase = datos[0][1]
                 jsonString = datos[1][1]
                 cadHash = str(index)+fh+nomClase+jsonString+str(hashC)
                 hashP = encriptar(cadHash)
-                self.agregarFinal(index,fh,nomClase,jsonString,hashC,hashP)
-                self.graficarListaDoble()
+                bloque = "{\n"+"\"INDEX\": "+str(index)+",\n"
+                bloque += "\"TIMESTAMP\": " +"\""+ fh +"\""+",\n"
+                bloque += "\"CLASS\": " +"\""+ nomClase+"\"" +",\n"
+                bloque += "\"DATA\": " + jsonString +",\n"
+                bloque += "\"PREVIOUSHASH\": "+"\"" + hashC +"\""+",\n"
+                bloque += "\"HASH\": "+"\""+ hashP +"\""+"\n"
+                bloque += "}"
+                return bloque
+                #self.agregarFinal(index,fh,nomClase,jsonString,hashC,hashP)
             else:
                 last = self.cabeza
                 while(last.siguiente is not None):
@@ -118,11 +126,18 @@ class Blockchain:
                 index = int(last.indice) + 1
                 nomClase = datos[0][1]
                 jsonString = datos[1][1]
-                hashC = last.hashActual
+                hashC = str(last.hashActual)
                 cadHash = str(index)+fh+nomClase+jsonString+str(hashC)
                 hashP = encriptar(cadHash) 
-                self.agregarFinal(index,fh,nomClase,jsonString,str(hashC),str(hashP))
-                self.graficarListaDoble()
+                bloque = "{\n"+"\"INDEX\": "+str(index)+",\n"
+                bloque += "\"TIMESTAMP\": " +"\""+ fh +"\""+",\n"
+                bloque += "\"CLASS\": " +"\""+ nomClase+"\"" +",\n"
+                bloque += "\"DATA\": " + jsonString +",\n"
+                bloque += "\"PREVIOUSHASH\": "+"\"" + hashC +"\""+",\n"
+                bloque += "\"HASH\": "+"\""+ hashP +"\""+"\n"
+                bloque += "}"
+                return bloque
+                #self.agregarFinal(index,fh,nomClase,jsonString,str(hashC),str(hashP))
                     
     def fechaHora(self):
         fecha=""
@@ -133,7 +148,34 @@ class Blockchain:
         fechaHora = fecha+"::"+hora
         return fechaHora
 
-            
+    def retornarHashUltimo(self):
+        last = self.cabeza
+        has=""
+        if(last.estaVacia()):
+            has = "0000"
+            return has
+        else:    
+            while(last.siguiente is not None):
+                last = last.siguiente
+            has = last.hashActual
+            return has  
+
+    def agregarJson(self,archivoJson):
+        ind = ""
+        tim=""
+        cs=""
+        dt=""
+        ph=""
+        hsh=""
+        estudiante = json.loads(archivoJson)
+        ind = int(estudiante['INDEX'])
+        tim = str(estudiante['TIMESTAMP'])
+        cs = str(estudiante['CLASS'])
+        dt = json.dumps(estudiante['DATA'],indent=2)
+        ph = str(estudiante['PREVIOUSHASH'])
+        hsh = str(estudiante['HASH'])
+        self.agregarFinal(ind,tim,cs,dt,ph,hsh)
+
 """lista = Blockchain()
 lista.agregarFinal(1,"fecha1","EDD","prueba1",0,0)
 lista.agregarFinal(2,"fecha2","EDD","prueba2",0,1)
