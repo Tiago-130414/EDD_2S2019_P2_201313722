@@ -157,7 +157,7 @@ class Blockchain:
         else:    
             while(last.siguiente is not None):
                 last = last.siguiente
-            has = last.hashActual
+            has = str(last.hashActual)
             return has  
 
     def agregarJson(self,archivoJson):
@@ -175,6 +175,17 @@ class Blockchain:
         ph = str(estudiante['PREVIOUSHASH'])
         hsh = str(estudiante['HASH'])
         self.agregarFinal(ind,tim,cs,dt,ph,hsh)
+
+    def verificarJson(self,jsonEntrante):
+        hashUltimo = self.retornarHashUltimo
+        hashEntrante=""
+        datos = json.loads(jsonEntrante)
+        hashEntrante = str(datos['PREVIOUSHASH'])
+        if  hashEntrante == hashUltimo:
+            return True
+        else:
+            return False   
+                
 
 """lista = Blockchain()
 lista.agregarFinal(1,"fecha1","EDD","prueba1",0,0)

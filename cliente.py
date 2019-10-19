@@ -12,6 +12,7 @@ from Lista_Doble import Blockchain
 nomArchivo = ""
 seleccionarBloque =""
 envio = ""
+jsonR =""
 
 def menu(window):
     titulo(window,'M E N U')
@@ -66,18 +67,24 @@ while (opcion==-1):
         if socks == server:
             message = socks.recv(2048)
             bandeja = message.decode('utf-8')
-            print(message.decode('utf-8'))
+            #print(message.decode('utf-8'))
             if bandeja == 'true':
                 #insertar si es true
-                pass
+                 #agrega el json a la lista
+                cadenaBloques.agregarJson(jsonR)
             elif bandeja == 'false':
-
-                pass
+                continue
             elif bandeja == 'Welcome to [EDD]Blockchain Project!':
                 pass
             else:
                 #verificar json
-                pass
+                jsonR = str(bandeja)
+                if(cadenaBloques.verificarJson(jsonR)==True):
+                    rTrue = 'true'
+                    server.sendall(rTrue.encode('utf-8'))
+                elif(cadenaBloques.verificarJson(jsonR)==False):
+                    rFalse = 'false'
+                    server.sendall(rFalse.encode('utf-8'))
         else:
             opcion = window.getch()
             if opcion == 49:
@@ -85,8 +92,6 @@ while (opcion==-1):
                 nomArchivo = cargar(window)
                 nomArchivo = nomArchivo.replace('\n','')
                 envio = cadenaBloques.leerCsv(nomArchivo)
-                #agrega el json a la lista
-                cadenaBloques.agregarJson(envio)
                 message = envio
                 texto_enviar = message
                 server.sendall(texto_enviar.encode('utf-8'))
