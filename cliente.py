@@ -67,7 +67,7 @@ while (opcion==-1):
         if socks == server:
             message = socks.recv(2048)
             bandeja = message.decode('utf-8')
-            #print(message.decode('utf-8'))
+            print(message.decode('utf-8'))
             if bandeja == 'true':
                 #insertar si es true
                  #agrega el json a la lista
@@ -75,7 +75,7 @@ while (opcion==-1):
             elif bandeja == 'false':
                 continue
             elif bandeja == 'Welcome to [EDD]Blockchain Project!':
-                pass
+                continue
             else:
                 #verificar json
                 jsonR = str(bandeja)
@@ -85,6 +85,7 @@ while (opcion==-1):
                 elif(cadenaBloques.verificarJson(jsonR)==False):
                     rFalse = 'false'
                     server.sendall(rFalse.encode('utf-8'))
+                   
         else:
             opcion = window.getch()
             if opcion == 49:
