@@ -99,7 +99,8 @@ class Blockchain:
         hashC = ""
         hashP = ""
         cadHash =""
-        with open (nombreArchivo) as File:
+        rt = str("C:/Users/santi/OneDrive/Desktop/EDD_2S2019_P2_201313722/bloques/" + nombreArchivo)
+        with open (rt) as File:
             lee = csv.reader(File, delimiter=',',quotechar='"',quoting=csv.QUOTE_MINIMAL)
             datos  = list(lee)
             #clase
@@ -151,14 +152,14 @@ class Blockchain:
     def retornarHashUltimo(self):
         last = self.cabeza
         has=""
-        if(last.estaVacia()):
+        if(self.estaVacia()):
             has = "0000"
-            return has
         else:    
             while(last.siguiente is not None):
                 last = last.siguiente
             has = str(last.hashActual)
-            return has  
+        print (has)    
+        return has 
 
     def agregarJson(self,archivoJson):
         ind = ""
@@ -177,10 +178,10 @@ class Blockchain:
         self.agregarFinal(ind,tim,cs,dt,ph,hsh)
 
     def verificarJson(self,jsonEntrante):
-        hashUltimo = self.retornarHashUltimo
+        hashUltimo = self.retornarHashUltimo()
         hashEntrante=""
         datos = json.loads(jsonEntrante)
-        hashEntrante = str(datos['PREVIOUSHASH'])
+        hashEntrante = str(datos['PREVIOUSHASH'])    
         if  hashEntrante == hashUltimo:
             return True
         else:

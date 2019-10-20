@@ -3,6 +3,8 @@ from curses import KEY_RIGHT,KEY_LEFT,KEY_UP,KEY_DOWN
 from SelectBlock import seleccionar
 from insertBlock import cargar
 from Reports import reportar
+from tkinter.messagebox import *
+import easygui
 #Estructuras
 from Lista_Doble import Blockchain
 #manejo archivos
@@ -47,6 +49,7 @@ opcion =-1
 while(opcion == -1):
     opcion = window.getch()
     if(opcion==49):
+        
         #Insert Block
         #cargar retorna un string con el nombre de archivo que se va a cargar
         nomArchivo = cargar(window)

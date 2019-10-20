@@ -1,6 +1,7 @@
 import socket
 import select
 import sys
+import easygui
 #curses
 import curses
 from SelectBlock import seleccionar
@@ -22,6 +23,7 @@ def menu(window):
     window.addstr(9,21,'3.- Reports', curses.color_pair(2))
     window.addstr(10,21,'4.- Salir',curses.color_pair(2))
     window.timeout(-1)
+
 
 def titulo(window,txt):
     window.clear()
@@ -67,47 +69,57 @@ while (opcion==-1):
         if socks == server:
             message = socks.recv(2048)
             bandeja = message.decode('utf-8')
-            print(message.decode('utf-8'))
-            if bandeja == 'true':
+            bandeja = str(bandeja)
+            #print("<server>")
+            #print(message.decode('utf-8'))
+            if (bandeja == 'true'):
                 #insertar si es true
-                 #agrega el json a la lista
+                #agrega el json a la lista
                 cadenaBloques.agregarJson(jsonR)
-            elif bandeja == 'false':
-                continue
-            elif bandeja == 'Welcome to [EDD]Blockchain Project!':
-                continue
+                easygui.msgbox("T R U E  A G R E G U E  B L O Q U E",title="<Server>")
+            elif (bandeja == 'false'):
+                print("falso")
+                easygui.msgbox("F A L S E  N O  A G R E G U E  B L O Q U E",title="<Server>")
+
+            elif (bandeja == 'Welcome to [EDD]Blockchain Project!'):
+                print("bienvenida")
             else:
                 #verificar json
                 jsonR = str(bandeja)
-                if(cadenaBloques.verificarJson(jsonR)==True):
+                print(jsonR)
+                bandera  = cadenaBloques.verificarJson(jsonR)
+                if(bandera==True):
                     rTrue = 'true'
                     server.sendall(rTrue.encode('utf-8'))
-                elif(cadenaBloques.verificarJson(jsonR)==False):
+                    easygui.msgbox("B L O Q U E  V A L I D O",title="<Server>")
+                elif(bandera==False):
                     rFalse = 'false'
                     server.sendall(rFalse.encode('utf-8'))
+                    easygui.msgbox("B L O Q U E  N O  V A L I D O",title="<Server>")
                    
         else:
             opcion = window.getch()
-            if opcion == 49:
+            if (opcion == 49):
                 #cargar archivos
                 nomArchivo = cargar(window)
                 nomArchivo = nomArchivo.replace('\n','')
                 envio = cadenaBloques.leerCsv(nomArchivo)
                 message = envio
+                jsonR = envio
                 texto_enviar = message
                 server.sendall(texto_enviar.encode('utf-8'))
-                sys.stdout.write("<you>")
-                sys.stdout.write(message)
+               # sys.stdout.write("<you>")
+                #sys.stdout.write(message)
                 sys.stdout.flush()
                 menu(window)
                 opcion=-1
-            elif opcion == 50:
+            elif (opcion == 50):
                 #seleccionar bloque
                 if not cadenaBloques.estaVacia():
                     seleccionar(window,cadenaBloques,bloqueS)
                 menu(window)
                 opcion=-1
-            elif opcion == 51:
+            elif (opcion == 51):
                 #reportes       
                 if not bloqueS.estaVacia():
                     if not cadenaBloques.estaVacia():            
@@ -121,7 +133,7 @@ while (opcion==-1):
                     menu(window)
                     opcion =-1
 
-            elif opcion == 52:
+            elif (opcion == 52):
                 #salir
                 break
             else:

@@ -8,12 +8,15 @@ cad2=""
 #arbol recorrido inorden
 cadInO=""
 cadInO2=""
+rIn=""
 #arbol recorrido postorden
 cadPost=""
 cadPost2=""
+rPo=""
 #arbol recorrido preorden
 cadPre=""
 cadPre2=""
+rPre=""
 List=[]
 class nodoArbol(object): 
     def __init__(self, carnet, nombre):
@@ -22,6 +25,7 @@ class nodoArbol(object):
         self.izquierda = None
         self.derecha = None
         self.altura = 1
+        self.FE = 0
   
 class arbolAVL(object): 
     
@@ -37,6 +41,8 @@ class arbolAVL(object):
         raiz.altura = 1 + max(self.getAltura(raiz.izquierda), 
                            self.getAltura(raiz.derecha)) 
   
+        raiz.FE = self.getBalance(raiz)
+        
         balance = self.getBalance(raiz) 
   
         # Caso 1 - izquierda  izquierda 
@@ -103,37 +109,35 @@ class arbolAVL(object):
     #recorrido de arbol
 
     def preOrder(self, raiz): 
-  
-        if not raiz: 
-            return
-  
-        print("{0} ".format(raiz.carnet), end="") 
-        self.preOrder(raiz.izquierda) 
-        self.preOrder(raiz.derecha) 
+        global rPre
+        if raiz: 
+            rPre += raiz.carnet +"-"+raiz.nombre+"->"
+            self.preOrder(raiz.izquierda) 
+            self.preOrder(raiz.derecha)
+        return rPre 
 
     def inOrder(self, raiz):
-        if not raiz:
-            return
-
-        self.inOrder(raiz.izquierda) 
-        print("{0} ".format(raiz.carnet), end="") 
-        self.inOrder(raiz.derecha)    
+        global rIn
+        if raiz:
+            self.inOrder(raiz.izquierda) 
+            rIn += raiz.carnet +"-"+raiz.nombre+"->"
+            self.inOrder(raiz.derecha)    
+        return rIn
 
     def postOrder(self,raiz):
-        if not raiz:
-            return
-           
-        self.postOrder(raiz.izquierda) 
-        self.postOrder(raiz.derecha)    
-        print("{0} ".format(raiz.carnet), end="") 
-
+        global rPo
+        if raiz:
+           self.postOrder(raiz.izquierda) 
+           self.postOrder(raiz.derecha)    
+           rPo += raiz.carnet +"-"+raiz.nombre+"->" 
+        return rPo
     #grafica arbol completo
 
     def listadoNodos(self, raiz):
         global cad
         if raiz:
             self.listadoNodos(raiz.izquierda)
-            cad +="\tNodo"+str(raiz.nombre)+"[label=\"<izquierda>|"+"carne: "+str(raiz.carnet)+"\\n"+"nombre: "+str(raiz.nombre)+"\\n"+"altura: "+str(raiz.altura)+"|<derecha>\"];\n"
+            cad +="\tNodo"+str(raiz.nombre)+"[label=\"<izquierda>|"+"carne: "+str(raiz.carnet)+"\\n"+"nombre: "+str(raiz.nombre)+"\\n"+"altura: "+str(raiz.altura)+"\\n"+"FE:"+str(raiz.FE)+"|<derecha>\"];\n"
             self.listadoNodos(raiz.derecha) 
         return cad         
 
@@ -203,6 +207,13 @@ class arbolAVL(object):
         global cadPre2
         cadPre=""
         cadPre2=""
+        #recorridos en consola
+        global rIn
+        global rPre
+        global rPo
+        rIn = ""
+        rPre = ""
+        rPo = ""
     # grafica recorrido inorden        
     def listadoNodosInO(self,raiz):
         global cadInO
