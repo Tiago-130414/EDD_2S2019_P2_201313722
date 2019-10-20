@@ -41,8 +41,8 @@ class arbolAVL(object):
         raiz.altura = 1 + max(self.getAltura(raiz.izquierda), 
                            self.getAltura(raiz.derecha)) 
   
-        raiz.FE = self.getBalance(raiz)
         
+        raiz.FE = self.getBalance(raiz)
         balance = self.getBalance(raiz) 
   
         # Caso 1 - izquierda  izquierda 
@@ -62,9 +62,17 @@ class arbolAVL(object):
         if balance < -1 and cnt < raiz.derecha.carnet: 
             raiz.derecha = self.rotacionDerecha(raiz.derecha) 
             return self.rotacionIzquierda(raiz) 
-  
+        
+        
         return raiz 
   
+    def actFE(self,raiz):
+        if raiz:
+           self.actFE(raiz.izquierda)
+           fe = self.getBalance(raiz)
+           raiz.FE = fe
+           self.actFE(raiz.derecha)
+            
     def rotacionIzquierda(self, z): 
   
         y = z.derecha 

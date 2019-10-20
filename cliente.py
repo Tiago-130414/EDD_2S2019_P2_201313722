@@ -80,7 +80,6 @@ while (opcion==-1):
             elif (bandeja == 'false'):
                 print("falso")
                 easygui.msgbox("F A L S E  N O  A G R E G U E  B L O Q U E",title="<Server>")
-
             elif (bandeja == 'Welcome to [EDD]Blockchain Project!'):
                 print("bienvenida")
             else:
@@ -91,11 +90,11 @@ while (opcion==-1):
                 if(bandera==True):
                     rTrue = 'true'
                     server.sendall(rTrue.encode('utf-8'))
-                    easygui.msgbox("B L O Q U E  V A L I D O",title="<Server>")
+                    easygui.msgbox("B L O Q U E  V A L I D O",title="<Verificacion Bloque>")
                 elif(bandera==False):
                     rFalse = 'false'
                     server.sendall(rFalse.encode('utf-8'))
-                    easygui.msgbox("B L O Q U E  N O  V A L I D O",title="<Server>")
+                    easygui.msgbox("B L O Q U E  N O  V A L I D O",title="<Verificacion Bloque>")
                    
         else:
             opcion = window.getch()

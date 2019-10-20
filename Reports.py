@@ -8,6 +8,7 @@ def reportar(window,cadenaB = object,bloqueSeleccionado = object):
     global r
     cjson = str(bloqueSeleccionado.cabeza.data)
     r = arbolito.leerJson(cjson,r)
+    arbolito.actFE(r)
     titulo(window,'R e p o r t s')
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK) 
     window.addstr(7,19,'1.-  BlockChain Report',curses.color_pair(2))
